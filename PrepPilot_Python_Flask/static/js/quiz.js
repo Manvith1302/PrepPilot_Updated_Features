@@ -9,7 +9,7 @@ if (form) {
     count.textContent = `${answered} of ${total} answered`;
     fill.style.width = `${answered / total * 100}%`;
   }
-  form.addEventListener("change", updateProgress);
+  document.addEventListener("change", updateProgress);
   let seconds = Number(form.dataset.duration);
   const timer = document.getElementById("timer");
   function tick() {

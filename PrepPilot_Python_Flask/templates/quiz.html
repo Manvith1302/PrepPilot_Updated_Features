@@ -1,1 +1,53 @@
-{% extends "base.html" %}{% block title %}{{ category }} Practice | PrepPilot{% endblock %}{% block content %}<section class="quiz-head"><div><div class="eyebrow">{{ category.upper() }} / PRACTICE TEST</div><h1>Focus. Think. <em>Answer.</em></h1><p class="muted">Choose one answer for each question. Your result is calculated when you submit.</p></div><div class="timer-box"><small>TIME LEFT</small><strong id="timer">--:--</strong></div></section><div class="quiz-progress"><div id="progress-fill"></div></div><form id="quiz-form" data-category="{{ category }}" data-duration="{{ duration }}"><div class="question-list">{% for q in questions %}<article class="question-card" data-question="{{ q.id }}"><div class="question-top"><span>QUESTION {{ "%02d"|format(loop.index) }}</span><span>{{ loop.index }} OF {{ questions|length }}</span></div><div class="question-title-row"><h3>{{ q.question }}</h3><form method="post" action="{{ url_for('toggle_bookmark', question_id=q.id) }}"><button class="bookmark-btn" type="submit">{{ '★ Saved' if q.id in saved_ids else '☆ Save' }}</button></form></div><div class="options">{% for letter,option in [('A',q.option_a),('B',q.option_b),('C',q.option_c),('D',q.option_d)] %}<label class="option"><input type="radio" name="{{ q.id }}" value="{{ letter }}"><span class="option-letter">{{ letter }}</span><span>{{ option }}</span></label>{% endfor %}</div></article>{% endfor %}</div><div class="quiz-submit"><span id="answered-count">0 of {{ questions|length }} answered</span><button class="btn primary" type="submit">Submit test <span>→</span></button></div></form><div id="result-modal" class="modal hidden"><div class="modal-card"><div class="success-mark">✓</div><div class="eyebrow">TEST COMPLETED</div><h2>Your result is ready</h2><div class="result-score" id="score-text"></div><p id="score-message"></p><a class="btn primary full" href="{{ url_for('results') }}">View my results</a></div></div><script src="{{ url_for('static',filename='js/quiz.js') }}"></script>{% endblock %}
+{% extends "base.html" %}
+{% block title %}{{ category }} Practice | PrepPilot{% endblock %}
+{% block content %}
+<section class="quiz-head">
+  <div>
+    <div class="eyebrow">{{ category.upper() }} / PRACTICE TEST</div>
+    <h1>Focus. Think. <em>Answer.</em></h1>
+    <p class="muted">Choose one answer for each question. Your result is calculated when you submit.</p>
+  </div>
+  <div class="timer-box"><small>TIME LEFT</small><strong id="timer">--:--</strong></div>
+</section>
+<div class="quiz-progress"><div id="progress-fill"></div></div>
+<form id="quiz-form" data-category="{{ category }}" data-duration="{{ duration }}"></form>
+<div class="question-list">
+  {% for q in questions %}
+  <article class="question-card" data-question="{{ q.id }}">
+    <div class="question-top">
+      <span>QUESTION {{ "%02d"|format(loop.index) }}</span>
+      <span>{{ loop.index }} OF {{ questions|length }}</span>
+    </div>
+    <div class="question-title-row">
+      <h3>{{ q.question }}</h3>
+      <form method="post" action="{{ url_for('toggle_bookmark', question_id=q.id) }}">
+        <button class="bookmark-btn" type="submit">{{ '★ Saved' if q.id in saved_ids else '☆ Save' }}</button>
+      </form>
+    </div>
+    <div class="options">
+      {% for letter,option in [('A',q.option_a),('B',q.option_b),('C',q.option_c),('D',q.option_d)] %}
+      <label class="option">
+        <input type="radio" name="{{ q.id }}" value="{{ letter }}" form="quiz-form">
+        <span class="option-letter">{{ letter }}</span><span>{{ option }}</span>
+      </label>
+      {% endfor %}
+    </div>
+  </article>
+  {% endfor %}
+</div>
+<div class="quiz-submit">
+  <span id="answered-count">0 of {{ questions|length }} answered</span>
+  <button class="btn primary" type="submit" form="quiz-form">Submit test <span>→</span></button>
+</div>
+<div id="result-modal" class="modal hidden">
+  <div class="modal-card">
+    <div class="success-mark">✓</div>
+    <div class="eyebrow">TEST COMPLETED</div>
+    <h2>Your result is ready</h2>
+    <div class="result-score" id="score-text"></div>
+    <p id="score-message"></p>
+    <a class="btn primary full" href="{{ url_for('results') }}">View my results</a>
+  </div>
+</div>
+<script src="{{ url_for('static',filename='js/quiz.js') }}"></script>
+{% endblock %}
