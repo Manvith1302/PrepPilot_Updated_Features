@@ -6,9 +6,15 @@ from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 from authlib.integrations.flask_client import OAuth
 from dotenv import load_dotenv
+from werkzeug.middleware.proxy_fix import ProxyFix
 
 load_dotenv()
 app = Flask(__name__)
+app.wsgi_app = ProxyFix(
+    app.wsgi_app,
+    x_proto=1,
+    x_host=1
+)
 app.config["SECRET_KEY"] = os.getenv("SECRET_KEY", "change-this-development-secret")
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///preppilot.db"
 app.config["SQLALCHEMY_TRACK_MODIFICATIONS"] = False
